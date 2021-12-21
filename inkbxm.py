@@ -19,6 +19,8 @@ import inkex
 class BoxMaster(inkex.EffectExtension):
 
     def add_arguments(self, pars):
+        pars.add_argument("--size", type=float,
+                          default=100, help="Box size (px)")
         pars.add_argument("--rows", type=int,
                           default=1, help="Number of rows")
         pars.add_argument("--columns", type=int,
@@ -30,7 +32,9 @@ class BoxMaster(inkex.EffectExtension):
         extensions/layout_nup.py.
         """
         layer = self.svg.add(inkex.Layer.new('bxmlayer'))
-        source = inkex.Rectangle(x='0', y='0', width='10', height='10')
+        source = inkex.Rectangle(x='0', y='0', width=str(
+            self.options.size), height=str(
+            self.options.size))
         model = layer.add(source.copy())
         model.set('id', 'bxmmodel')
         use = layer.add(inkex.Use())
