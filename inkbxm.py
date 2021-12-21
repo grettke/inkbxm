@@ -31,15 +31,25 @@ class BoxMaster(inkex.EffectExtension):
         This cloning approach follows Nup.generate_nup.make_clones in
         extensions/layout_nup.py.
         """
-        layer = self.svg.add(inkex.Layer.new('bxmlayer'))
-        source = inkex.Rectangle(x='0', y='0', width=str(
-            self.options.size), height=str(
-            self.options.size))
-        model = layer.add(source.copy())
-        model.set('id', 'bxmmodel')
-        use = layer.add(inkex.Use())
-        use.set('xlink:href', '#' + 'bxmmodel')
-        use.transform.add_translate(20, 20)
+        layername = 'bxmlayer'
+        modelname = 'bxmmodel'
+        size = self.options.size
+        rows = self.options.rows
+        columns = self.options.columns
+
+        layer = self.svg.add(inkex.Layer.new(layername))
+        source = inkex.Rectangle(x='0', y='0', width=str(size), height=str(
+            size))
+
+        for row in range (0, rows):
+            for col in range (0, columns):
+                if row == 0 and col == 0:
+                    model = layer.add(source.copy())
+                    model.set('id', modelname)
+                    continue
+                use = layer.add(inkex.Use())
+                use.set('xlink:href', '#' + modelname)
+                use.transform.add_translate(col * size, row * size)
 
 
 if __name__ == '__main__':
