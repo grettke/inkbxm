@@ -19,37 +19,46 @@ import inkex
 class BoxMaster(inkex.EffectExtension):
 
     def add_arguments(self, pars):
-        pars.add_argument("--size", type=float,
-                          default=100, help="Box size (px)")
-        pars.add_argument("--rows", type=int,
-                          default=1, help="Number of rows")
-        pars.add_argument("--columns", type=int,
-                          default=1, help="Number of columns")
+        pars.add_argument("--size", type=float, default=100,
+                          help="Box size (px)")
+        pars.add_argument("--rows", type=int, default=1, help="Number of rows")
+        pars.add_argument("--columns", type=int, default=1,
+                          help="Number of columns")
+        pars.add_argument("--spacing", type=float, default=0,
+                          help="Spacing distance (px)")
 
     def effect(self):
         """
-        This cloning approach follows Nup.generate_nup.make_clones in
-        extensions/layout_nup.py.
+        Implementation.
         """
-        layername = 'bxmlayer'
-        modelname = 'bxmmodel'
+        layer_name = 'bxmlayer'
+        model_name = 'bxmmodel'
         size = self.options.size
+        size_str = str(size)
         rows = self.options.rows
         columns = self.options.columns
+        spacing = self.options.spacing
 
-        layer = self.svg.add(inkex.Layer.new(layername))
-        source = inkex.Rectangle(x='0', y='0', width=str(size), height=str(
-            size))
+        layer = self.svg.add(inkex.Layer.new(layer_name))
+        source = inkex.Rectangle(x='0', y='0', width=size_str, height=size_str)
+        model = layer.add(source.copy())
+        model.set('id', model_name)
 
-        for row in range (0, rows):
-            for col in range (0, columns):
-                if row == 0 and col == 0:
-                    model = layer.add(source.copy())
-                    model.set('id', modelname)
+        for row_index in range(0, rows):
+            row_y_translation = row_index * size
+            if not row_index == 0:
+                row_y_translation = row_y_translation + (spacing * row_index)
+            for column_index in range(0, columns):
+                if row_index == 0 and column_index == 0:
                     continue
                 use = layer.add(inkex.Use())
-                use.set('xlink:href', '#' + modelname)
-                use.transform.add_translate(col * size, row * size)
+                use.set('xlink:href', '#' + model_name)
+                column_x_translation = column_index * size
+                if not column_index == 0:
+                    column_x_translation = column_x_translation + (spacing *
+                                                                   column_index)
+                use.transform.add_translate(column_x_translation,
+                                            row_y_translation)
 
 
 if __name__ == '__main__':

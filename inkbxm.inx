@@ -25,6 +25,9 @@
     </param>
     <param type="int" name="columns" gui-text="Number of columns?" min="1">2
     </param>
+    <param type="float" name="spacing" gui-text="Spacing distance (px)?" min="0"
+           max="3779.528" precision="3">0
+    </param>
 
     <effect>
         <object-type>all</object-type>
