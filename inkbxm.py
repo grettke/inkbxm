@@ -14,6 +14,7 @@
 # GNU General Public License for more details.
 #
 import inkex
+import datetime
 
 
 class BoxMaster(inkex.EffectExtension):
@@ -31,8 +32,9 @@ class BoxMaster(inkex.EffectExtension):
         """
         Implementation.
         """
-        layer_name = 'bxmlayer'
-        model_name = 'bxmmodel'
+        now = datetime.datetime.now().isoformat()
+        layer_name = 'bxm:' + now
+        model_name = 'bxm.model:' + now
         size = self.options.size
         size_str = str(size)
         rows = self.options.rows
