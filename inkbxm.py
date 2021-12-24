@@ -31,8 +31,8 @@ class BoxMaster(inkex.EffectExtension):
         pars.add_argument("--tab", help="Ignored.")
 
     def effect(self):
-        layer_name = self.svg.get_unique_id('bxm')
-        model_name = self.svg.get_unique_id('bxm.model')
+        layer_name = self.svg.get_unique_id('bxm:')
+        model_name = self.svg.get_unique_id('bxm.model:')
         user_side = self.options.side
         side = self.svg.unittouu(str(user_side) + self.options.units)
         side_str = str(side)
@@ -54,7 +54,7 @@ class BoxMaster(inkex.EffectExtension):
                 if row_index == 0 and column_index == 0:
                     continue
                 use = layer.add(inkex.Use())
-                use.set('id', self.svg.get_unique_id('bxm.use'))
+                use.set('id', self.svg.get_unique_id('bxm.clone:'))
                 use.set('xlink:href', '#' + model_name)
                 column_x_translation = column_index * side
                 if not column_index == 0:
