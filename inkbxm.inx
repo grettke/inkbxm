@@ -20,7 +20,7 @@
 
     <label appearance="header">Create a grid composed of squares.</label>
     <label>Hover over parameters for description.</label>
-    <label>Click "Help" tab for assistance.</label>
+    <label>Click "README" tab for assistance.</label>
     <param name="tab" type="notebook">
         <page name="parameters" gui-text="Parameters">
             <param name="units" gui-text="Units?"
@@ -54,8 +54,8 @@
                    max="3779.528" precision="3">0
             </param>
         </page>
-        <page name="help" gui-text="Help">
-            <label>Help TODO.</label>
+        <page name="help" gui-text="README">
+            <label>README TODO.</label>
         </page>
     </param>
 
