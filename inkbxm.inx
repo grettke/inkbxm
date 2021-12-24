@@ -21,9 +21,19 @@
     <label appearance="header">Create a grid composed of squares.</label>
     <label>Hover over parameters for description.</label>
     <label>Click "Help" tab for assistance.</label>
-    <param name="pages" type="notebook">
+    <param name="tab" type="notebook">
         <page name="parameters" gui-text="Parameters">
-            <param type="float" name="size" gui-text="Side length? (px)?"
+            <param name="units" gui-text="Units?"
+                   gui-description="Search for -Units In Inkscape- for more details."
+                   type="optiongroup"
+                   appearance="combo">
+                <option translatable="no" value="px">px</option>
+                <option translatable="no" value="pt">pt</option>
+                <option translatable="no" value="mm">mm</option>
+                <option translatable="no" value="cm">cm</option>
+                <option translatable="no" value="in">in</option>
+            </param>
+            <param type="float" name="side" gui-text="Side length?"
                    gui-description="A box has equal sides, and every angle is a right angle."
                    min="1"
                    max="3779.528" precision="3">37.795
@@ -38,7 +48,7 @@
                    max="1000">2
             </param>
             <param type="float" name="spacing"
-                   gui-text="Spacing distance (px)?"
+                   gui-text="Spacing distance?"
                    gui-description="The gap between the end of the current box and the start of the next one."
                    min="0"
                    max="3779.528" precision="3">0

@@ -13,20 +13,24 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-import inkex
 import datetime
+
+import inkex
 
 
 class BoxMaster(inkex.EffectExtension):
 
     def add_arguments(self, pars):
-        pars.add_argument("--size", type=float, default=100,
-                          help="Box size (px)")
+        pars.add_argument("--units", default="px",
+                          help="Units: px, pt, mm, cm, or in.")
+        pars.add_argument("--side", type=float, default=100,
+                          help="Side length.")
         pars.add_argument("--rows", type=int, default=1, help="Number of rows")
         pars.add_argument("--columns", type=int, default=1,
                           help="Number of columns")
         pars.add_argument("--spacing", type=float, default=0,
-                          help="Spacing distance (px)")
+                          help="Spacing distance.")
+        pars.add_argument("--tab", help="Ignored.")
 
     def effect(self):
         """
@@ -35,19 +39,21 @@ class BoxMaster(inkex.EffectExtension):
         now = datetime.datetime.now().isoformat()
         layer_name = 'bxm:' + now
         model_name = 'bxm.model:' + now
-        size = self.options.size
-        size_str = str(size)
+        user_side = self.options.side
+        side = self.svg.unittouu(str(user_side) + self.options.units)
+        side_str = str(side)
         rows = self.options.rows
         columns = self.options.columns
         spacing = self.options.spacing
 
         layer = self.svg.add(inkex.Layer.new(layer_name))
-        source = inkex.Rectangle(x='0', y='0', width=size_str, height=size_str)
+        source = inkex.Rectangle(x='0', y='0', width=side_str,
+                                 height=side_str)
         model = layer.add(source.copy())
         model.set('id', model_name)
 
         for row_index in range(0, rows):
-            row_y_translation = row_index * size
+            row_y_translation = row_index * side
             if not row_index == 0:
                 row_y_translation = row_y_translation + (spacing * row_index)
             for column_index in range(0, columns):
@@ -55,7 +61,7 @@ class BoxMaster(inkex.EffectExtension):
                     continue
                 use = layer.add(inkex.Use())
                 use.set('xlink:href', '#' + model_name)
-                column_x_translation = column_index * size
+                column_x_translation = column_index * side
                 if not column_index == 0:
                     column_x_translation = column_x_translation + (spacing *
                                                                    column_index)
