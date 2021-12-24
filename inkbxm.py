@@ -33,6 +33,7 @@ class BoxMaster(inkex.EffectExtension):
     def effect(self):
         layer_name = self.svg.get_unique_id('bxm:')
         model_name = self.svg.get_unique_id('bxm.model:')
+
         user_side = self.options.side
         side = self.svg.unittouu(str(user_side) + self.options.units)
         side_str = str(side)
@@ -43,6 +44,9 @@ class BoxMaster(inkex.EffectExtension):
         layer = self.svg.add(inkex.Layer.new(layer_name))
         source = inkex.Rectangle(x='0', y='0', width=side_str,
                                  height=side_str)
+        source.style = {'stroke': '#000000', 'stroke-opacity': '1',
+                        'stroke-width': self.svg.unittouu('1px'), 'fill': 'none'}
+
         model = layer.add(source.copy())
         model.set('id', model_name)
 
