@@ -33,9 +33,6 @@ class BoxMaster(inkex.EffectExtension):
         pars.add_argument("--tab", help="Ignored.")
 
     def effect(self):
-        """
-        Implementation.
-        """
         now = datetime.datetime.now().isoformat()
         layer_name = 'bxm:' + now
         model_name = 'bxm.model:' + now
