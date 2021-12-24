@@ -13,8 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-import datetime
-
 import inkex
 
 
@@ -33,9 +31,8 @@ class BoxMaster(inkex.EffectExtension):
         pars.add_argument("--tab", help="Ignored.")
 
     def effect(self):
-        now = datetime.datetime.now().isoformat()
-        layer_name = 'bxm:' + now
-        model_name = 'bxm.model:' + now
+        layer_name = self.svg.get_unique_id('bxm')
+        model_name = self.svg.get_unique_id('bxm.model')
         user_side = self.options.side
         side = self.svg.unittouu(str(user_side) + self.options.units)
         side_str = str(side)
