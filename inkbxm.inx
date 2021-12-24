@@ -18,15 +18,22 @@
     <name>Box Master</name>
     <id>com.wisdomandwonder.render.bxm</id>
 
-    <param type="float" name="size" gui-text="Square size (px)?" min="1"
+    <param type="float" name="size" gui-text="Side length? (px)?"
+           gui-description="A box has equal sides, and every angle is a right angle."
+           min="1"
            max="3779.528" precision="3">37.795
     </param>
-    <param type="int" name="rows" gui-text="Number of rows?" min="1"
+    <param type="int" name="rows" gui-text="Number of rows?"
+           gui-description="The rows go from left to right." min="1"
            max="1000">2
     </param>
-    <param type="int" name="columns" gui-text="Number of columns?" min="1" max="1000">2
+    <param type="int" name="columns" gui-text="Number of columns?"
+           gui-description="The columns go from top to bottom." min="1"
+           max="1000">2
     </param>
-    <param type="float" name="spacing" gui-text="Spacing distance (px)?" min="0"
+    <param type="float" name="spacing" gui-text="Spacing distance (px)?"
+           gui-description="The gap between the end of the current box and the start of the next one."
+           min="0"
            max="3779.528" precision="3">0
     </param>
 
