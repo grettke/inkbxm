@@ -54,6 +54,7 @@ class BoxMaster(inkex.EffectExtension):
                 if row_index == 0 and column_index == 0:
                     continue
                 use = layer.add(inkex.Use())
+                use.set('id', self.svg.get_unique_id('bxm.use'))
                 use.set('xlink:href', '#' + model_name)
                 column_x_translation = column_index * side
                 if not column_index == 0:
