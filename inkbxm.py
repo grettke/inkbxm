@@ -56,7 +56,7 @@ class BoxMaster(EffectExtension):
         # boxes. The prefix makes it stand out.
         model_name = s.get_unique_id(prf + '.model:')
 
-        # User specifies units for conversion to user-inits:
+        # User specifies units for conversion to user-units:
         # *this is a feature*.
         side = s.unittouu(str(o.side) + o.units)
 
