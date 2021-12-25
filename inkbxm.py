@@ -20,7 +20,7 @@ class BoxMaster(inkex.EffectExtension):
 
     def add_arguments(self, p):
         # The INX file is the authoritative source of this information:
-        # keep it current then update it here.
+        # keep that current /then/ update it here.
         p.add_argument("--units", type=str, default="px",
                        help="Unit of Measurement: px, pt, mm, cm, or in.")
         p.add_argument("--side", type=float, default=100,
@@ -35,6 +35,7 @@ class BoxMaster(inkex.EffectExtension):
         p.add_argument("--tab", type=str, help="Ignored.")
 
     def effect(self):
+
         groupbase_name = self.svg.get_unique_id('bxm:')
         model_name = self.svg.get_unique_id('bxm.model:')
 
