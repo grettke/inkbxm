@@ -20,7 +20,7 @@ class BoxMaster(inkex.EffectExtension):
 
     def add_arguments(self, p):
         # The INX file is the authoritative source of this information:
-        # keep this consistent.
+        # keep it current then update it here.
         p.add_argument("--units", type=str, default="px",
                        help="Unit of Measurement: px, pt, mm, cm, or in.")
         p.add_argument("--side", type=float, default=100,
