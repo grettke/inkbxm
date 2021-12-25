@@ -91,7 +91,9 @@ class BoxMaster(EffectExtension):
 
         # Model object configuration.
         source = Rectangle(x='0', y='0', width=str(side), height=str(side))
-        # TODO: Address stroke-width unit
+        # Although the SVG spec /reads like/ specifying *any* number
+        # /without/ a unit defaults the unit to px, the stroke-width must be
+        # configured via unittouu. Reason? Unknown.
         source.style = {'stroke': '#000000', 'stroke-opacity': '1',
                         'stroke-width': s.unittouu('1px'),
                         'fill': 'none'}
