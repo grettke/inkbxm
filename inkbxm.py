@@ -13,14 +13,14 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-import inkex
+from inkex import EffectExtension, Group, Layer, Rectangle, Use, utils
 
 
-class BoxMaster(inkex.EffectExtension):
+class BoxMaster(EffectExtension):
 
     def add_arguments(self, p):
         # The INX file is the authoritative source of this information:
-        # keep that current /then/ update it here.
+        # keep *that* current /then/ update it _here_.
         p.add_argument("--units", type=str, default="px",
                        help="Unit of Measurement: px, pt, mm, cm, or in.")
         p.add_argument("--side", type=float, default=100,
@@ -35,65 +35,94 @@ class BoxMaster(inkex.EffectExtension):
         p.add_argument("--tab", type=str, help="Ignored.")
 
     def effect(self):
+        # Shorten references.
+        s = self.svg
+        o = self.options
 
-        groupbase_name = self.svg.get_unique_id('bxm:')
-        model_name = self.svg.get_unique_id('bxm.model:')
+        # Object ID prefix to uniquely namespace and consistently name
+        # extension created objects.
+        prf = 'bxm'
 
-        user_side = self.options.side
-        side = self.svg.unittouu(str(user_side) + self.options.units)
-        side_str = str(side)
-        rows = self.options.rows
-        columns = self.options.columns
-        spacing = self.options.spacing
-        groupbase_type = self.options.grouptype
-        groupbase = 'Undefined'
+        # Inkex GroupBase objects define any group elements. This extension
+        # uses those groups to store objects it creates. To avoid confusion
+        # between different group objects though naming the reference with its
+        # base type. Also forward declaring it for sake of the reader.
+        gbase_name = s.get_unique_id(prf + ':')
+        gbase = None
 
-        if groupbase_type == 'newgroup':
-            groupbase = self.svg.get_current_layer().add(
-                inkex.Group.new(groupbase_name))
-        elif groupbase_type == 'newrootlayer':
-            groupbase = self.svg.add(
-                inkex.Layer.new(groupbase_name))
-        elif groupbase_type == 'newsublayer':
-            groupbase = self.svg.get_current_layer().add(
-                inkex.Layer.new(groupbase_name))
-        elif groupbase_type == 'currentlayer':
-            groupbase = self.svg.get_current_layer()
+        # The "Model" box object serves as the source for creating all new
+        # boxes. The prefix makes it stand out.
+        model_name = s.get_unique_id(prf + '.model:')
+
+        # User specifies units for conversion to user-inits:
+        # *this is a feature*.
+        side = s.unittouu(str(o.side) + o.units)
+
+        # Many objects are created so apply a grouping strategy. It comes
+        # down to either: use or create—an object or layer. They are listed
+        # in order with an emphasis on brand-new groupings.
+        if o.grouptype == 'newgroup':
+            # Create a new group and add there.
+            gbase = s.get_current_layer().add(
+                Group.new(gbase_name))
+        elif o.grouptype == 'newrootlayer':
+            # Create a new root layer and add there.
+            gbase = s.add(
+                Layer.new(gbase_name))
+        elif o.grouptype == 'newsublayer':
+            # Create a new sub-layer and add there.
+            gbase = s.get_current_layer().add(
+                Layer.new(gbase_name))
+        elif o.grouptype == 'currentlayer':
+            # Add objects to /this/ layer.
+            gbase = s.get_current_layer()
         else:
-            inkex.utils.debug("I'm sorry it looks like I might have a bug: " +
-                              "I don't know how to handle a " +
-                              "groupbase_type of '" + groupbase_type + "'. " +
-                              "You can also still try to use another group "
-                              "type. " +
-                              "Please see README and file an issue report. " +
-                              "I appreciate your help!")
+            # Don't support that group type so ask for help.
+            utils.debug("I'm sorry it looks like I might have a bug: " +
+                        "I don't know how to handle a " +
+                        "o.grouptype of '" + o.grouptype + "'. " +
+                        "You can also still try to use another group "
+                        "type. " +
+                        "Please see README and file an issue report. " +
+                        "I appreciate your help!")
             return
 
-        source = inkex.Rectangle(x='0', y='0', width=side_str,
-                                 height=side_str)
+        # Model object configuration.
+        source = Rectangle(x='0', y='0', width=str(side), height=str(side))
+        # TODO: Address stroke-width unit
         source.style = {'stroke': '#000000', 'stroke-opacity': '1',
-                        'stroke-width': self.svg.unittouu('1px'),
+                        'stroke-width': s.unittouu('1px'),
                         'fill': 'none'}
-
-        model = groupbase.add(source.copy())
+        # A "Model" object is created by copy of a source object.
+        # Reason why? Unknown.
+        # Determined by researching built-in extensions.
+        model = gbase.add(source.copy())
         model.set('id', model_name)
 
-        for row_index in range(0, rows):
-            row_y_translation = row_index * side
-            if not row_index == 0:
-                row_y_translation = row_y_translation + (spacing * row_index)
-            for column_index in range(0, columns):
-                if row_index == 0 and column_index == 0:
+        # Rows go left to right starting at 0.
+        # Columns go top to bottom starting at 0.
+        for row_idx in range(0, o.rows):
+            row_y_shift = row_idx * side
+            # Don't add space above the first row.
+            if not row_idx == 0:
+                row_y_shift = row_y_shift + (o.spacing * row_idx)
+            for column_idx in range(0, o.columns):
+                if row_idx == 0 and column_idx == 0:
                     continue
-                use = groupbase.add(inkex.Use())
-                use.set('id', self.svg.get_unique_id('bxm.clone:'))
+                # A Use element links itself to another element. Readers know
+                # this as a Clone in both common-use and Inkscape terminolog:
+                # specifically Edit -> Clone -> Create Clone. Although this
+                # is in the class documentation, like other code: built-in
+                # extensions were researched to verify usage.
+                use = gbase.add(Use())
+                # Clones need distinct names.
+                use.set('id', s.get_unique_id(prf + '.clone:'))
                 use.set('xlink:href', '#' + model_name)
-                column_x_translation = column_index * side
-                if not column_index == 0:
-                    column_x_translation = column_x_translation + (spacing *
-                                                                   column_index)
-                use.transform.add_translate(column_x_translation,
-                                            row_y_translation)
+                column_x_shift = column_idx * side
+                # Don't add space betfore the first column.
+                if not column_idx == 0:
+                    column_x_shift = column_x_shift + (o.spacing * column_idx)
+                use.transform.add_translate(column_x_shift, row_y_shift)
 
 
 if __name__ == '__main__':
