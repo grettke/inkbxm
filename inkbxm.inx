@@ -53,6 +53,14 @@
                    min="0"
                    max="3779.528" precision="3">0
             </param>
+            <param name="grouptype" gui-text="Group boxes in?"
+                   gui-description="Add new boxes to this group type."
+                   type="optiongroup" appearance="radio">
+                <option translatable="no" value="newgroup">New Group</option>
+                <option translatable="no" value="newrootlayer">New Root Layer</option>
+                <option translatable="no" value="newsublayer">New Sub Layer</option>
+                <option translatable="no" value="currentlayer">Current Layer</option>
+            </param>
         </page>
         <page name="help" gui-text="README">
             <label>README TODO.</label>

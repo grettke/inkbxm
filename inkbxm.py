@@ -28,10 +28,12 @@ class BoxMaster(inkex.EffectExtension):
                           help="Number of columns")
         pars.add_argument("--spacing", type=float, default=0,
                           help="Spacing distance.")
+        pars.add_argument("--grouptype", type=str, default="newgroup",
+                          help="Group element type.")
         pars.add_argument("--tab", help="Ignored.")
 
     def effect(self):
-        layer_name = self.svg.get_unique_id('bxm:')
+        groupbase_name = self.svg.get_unique_id('bxm:')
         model_name = self.svg.get_unique_id('bxm.model:')
 
         user_side = self.options.side
@@ -40,14 +42,37 @@ class BoxMaster(inkex.EffectExtension):
         rows = self.options.rows
         columns = self.options.columns
         spacing = self.options.spacing
+        groupbase_type = self.options.grouptype
+        groupbase = 'Undefined'
 
-        layer = self.svg.add(inkex.Layer.new(layer_name))
+        if groupbase_type == 'newgroup':
+            groupbase = self.svg.get_current_layer().add(
+                inkex.Group.new(groupbase_name))
+        elif groupbase_type == 'newrootlayer':
+            groupbase = self.svg.add(
+                inkex.Layer.new(groupbase_name))
+        elif groupbase_type == 'newsublayer':
+            groupbase = self.svg.get_current_layer().add(
+                inkex.Layer.new(groupbase_name))
+        elif groupbase_type == 'currentlayer':
+            groupbase = self.svg.get_current_layer()
+        else:
+            inkex.utils.debug("I'm sorry it looks like I might have a bug: " +
+                              "I don't know how to handle a " +
+                              "groupbase_type of '" + groupbase_type + "'. " +
+                              "You can also still try to use another group "
+                              "type. " +
+                              "Please see README and file an issue report. " +
+                              "I appreciate your help!")
+            return
+
         source = inkex.Rectangle(x='0', y='0', width=side_str,
                                  height=side_str)
         source.style = {'stroke': '#000000', 'stroke-opacity': '1',
-                        'stroke-width': self.svg.unittouu('1px'), 'fill': 'none'}
+                        'stroke-width': self.svg.unittouu('1px'),
+                        'fill': 'none'}
 
-        model = layer.add(source.copy())
+        model = groupbase.add(source.copy())
         model.set('id', model_name)
 
         for row_index in range(0, rows):
@@ -57,7 +82,7 @@ class BoxMaster(inkex.EffectExtension):
             for column_index in range(0, columns):
                 if row_index == 0 and column_index == 0:
                     continue
-                use = layer.add(inkex.Use())
+                use = groupbase.add(inkex.Use())
                 use.set('id', self.svg.get_unique_id('bxm.clone:'))
                 use.set('xlink:href', '#' + model_name)
                 column_x_translation = column_index * side
