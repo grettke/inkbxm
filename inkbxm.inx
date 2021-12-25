@@ -18,7 +18,7 @@
     <name>Box Master</name>
     <id>com.wisdomandwonder.render.bxm</id>
 
-    <label appearance="header">Create a grid composed of squares.</label>
+    <label appearance="header">Create a grid of cloned boxes.</label>
     <label>Hover over parameters for description.</label>
     <label>Click "README" tab for assistance.</label>
     <param name="tab" type="notebook">

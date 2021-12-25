@@ -15,7 +15,9 @@
 #
 from inkex import EffectExtension, Group, Layer, Rectangle, Use, utils
 
-
+#
+# Create a grid of cloned boxes.
+#
 class BoxMaster(EffectExtension):
 
     def add_arguments(self, p):
