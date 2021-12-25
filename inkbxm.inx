@@ -23,7 +23,7 @@
     <label>Click "README" tab for assistance.</label>
     <param name="tab" type="notebook">
         <page name="parameters" gui-text="Parameters">
-            <param name="units" gui-text="Units?"
+            <param name="units" gui-text="Unit of Measurement?"
                    gui-description="Search for -Units In Inkscape- for more details."
                    type="optiongroup"
                    appearance="combo">

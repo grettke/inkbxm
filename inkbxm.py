@@ -18,19 +18,19 @@ import inkex
 
 class BoxMaster(inkex.EffectExtension):
 
-    def add_arguments(self, pars):
-        pars.add_argument("--units", default="px",
-                          help="Units: px, pt, mm, cm, or in.")
-        pars.add_argument("--side", type=float, default=100,
-                          help="Side length.")
-        pars.add_argument("--rows", type=int, default=1, help="Number of rows")
-        pars.add_argument("--columns", type=int, default=1,
-                          help="Number of columns")
-        pars.add_argument("--spacing", type=float, default=0,
-                          help="Spacing distance.")
-        pars.add_argument("--grouptype", type=str, default="newgroup",
-                          help="Group element type.")
-        pars.add_argument("--tab", help="Ignored.")
+    def add_arguments(self, p):
+        p.add_argument("--units", type=str, default="px",
+                       help="Unit of Measurement: px, pt, mm, cm, or in.")
+        p.add_argument("--side", type=float, default=100,
+                       help="Side length.")
+        p.add_argument("--rows", type=int, default=1, help="Number of rows.")
+        p.add_argument("--columns", type=int, default=1,
+                       help="Number of columns.")
+        p.add_argument("--spacing", type=float, default=0,
+                       help="Spacing distance.")
+        p.add_argument("--grouptype", type=str, default="newgroup",
+                       help="Group element type.")
+        p.add_argument("--tab", type=str, help="Ignored.")
 
     def effect(self):
         groupbase_name = self.svg.get_unique_id('bxm:')
